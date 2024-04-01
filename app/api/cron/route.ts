@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import {
   getLowestPrice,
   getHighestPrice,
@@ -10,7 +11,7 @@ import Product from "@/lib/models/product.model";
 import { scrapeAmazonProduct } from "@/lib/scraper";
 import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
 
-export const maxDuration = 10; // This function can run for a maximum of 10 seconds (vercel hobby)
+export const maxDuration = 10; // This function can run for a maximum of 10 seconds
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -22,7 +23,7 @@ export async function GET(request: Request) {
 
     if (!products) throw new Error("No product fetched");
 
-    // 1. SCRAPE LATEST PRODUCT DETAILS & UPDATE DB
+    // ======================== 1 SCRAPE LATEST PRODUCT DETAILS & UPDATE DB
     const updatedProducts = await Promise.all(
       products.map(async (currentProduct) => {
         // Scrape product
@@ -53,7 +54,7 @@ export async function GET(request: Request) {
           product
         );
 
-        // 2. CHECK EACH PRODUCT'S STATUS & SEND EMAIL ACCORDINGLY
+        // ======================== 2 CHECK EACH PRODUCT'S STATUS & SEND EMAIL ACCORDINGLY
         const emailNotifType = getEmailNotifType(
           scrapedProduct,
           currentProduct
